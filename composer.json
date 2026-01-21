@@ -1,0 +1,30 @@
+{
+    "name": "calema/student-management",
+    "description": "Flexible student management module for Calema microservices",
+    "type": "library",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Calema Team",
+            "email": "dev@calema.tech"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Calema\\StudentManagement\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Calema\\StudentManagement\\StudentManagementServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
