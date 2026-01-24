@@ -20,14 +20,14 @@ return new class extends Migration
             $table->string('field_label'); // 表示名
             $table->string('field_type'); // text, textarea, number, date, select, checkbox
             $table->json('field_options')->nullable(); // selectの選択肢など
-            $table->string('target_model'); // student_profile, guardian
+            $table->string('entity_type')->default('student'); // student, guardian
             $table->boolean('is_required')->default(false);
-            $table->integer('sort_order')->default(0);
+            $table->integer('display_order')->default(0);
             $table->boolean('is_active')->default(true);
 
             $table->timestamps();
 
-            $table->index(['tenant_id', 'target_model', 'is_active']);
+            $table->index(['tenant_id', 'entity_type', 'is_active']);
         });
     }
 

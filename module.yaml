@@ -1,0 +1,126 @@
+name: student-management
+package: calema/student-management
+version: 1.0.0
+description: Comprehensive student management module with Calema SSO integration, guardian support, and invitation system
+author: Calema Team
+license: MIT
+
+repository:
+  type: vcs
+  url: https://github.com/ryunosukekuninobu/student-management.git
+
+features:
+  - Student profile management with auto-generated student numbers
+  - Multiple guardian support per student
+  - Email invitation system (7-day validity)
+  - Admin proxy registration
+  - Tenant-configurable guardian requirements
+  - Custom fields per tenant
+  - Health and emergency contact information
+  - Calema SSO integration (user_type extension)
+
+dependencies:
+  - calema/multi-tenancy
+  - calema/calema-sso
+  - calema/design-system
+
+database:
+  migrations:
+    - 2025_01_22_000010_add_user_type_to_users_table
+    - 2025_01_22_000011_create_student_profiles_table
+    - 2025_01_22_000012_create_guardians_table
+    - 2025_01_22_000013_create_tenant_custom_fields_table
+    - 2025_01_22_000014_add_guardian_settings_to_tenants_table
+    - 2025_01_22_000015_create_student_invitations_table
+
+routes:
+  web:
+    - GET /students - Student list (students.index)
+    - GET /students/create - Create student form (students.create)
+    - POST /students - Store student (students.store)
+    - GET /students/{student} - Show student details (students.show)
+    - GET /students/{student}/edit - Edit student form (students.edit)
+    - PUT /students/{student} - Update student (students.update)
+    - DELETE /students/{student} - Delete student (students.destroy)
+    - GET /students/invite/create - Invitation form (students.invite.create)
+    - POST /students/invite/send - Send invitation (students.invite.send)
+    - GET /students/settings - Settings page (students.settings.index)
+    - PUT /students/settings - Update settings (students.settings.update)
+
+models:
+  - StudentProfile
+  - Guardian
+  - TenantCustomField
+  - StudentInvitation
+
+services:
+  - StudentService
+  - StudentInvitationService
+
+views:
+  - students.index
+  - students.create
+  - students.show
+  - students.edit
+  - students.invite
+  - students.settings
+
+configuration:
+  default_settings:
+    requires_guardian_info: true
+    auto_generate_student_number: true
+    invitation_validity_days: 7
+    max_guardians_per_student: 5
+    allowed_student_statuses:
+      - active
+      - inactive
+      - graduated
+      - withdrawn
+
+mcp_tools:
+  - name: create_student
+    description: Create a new student with guardian information
+    parameters:
+      - name
+      - email
+      - phone
+      - tenant_id
+      - guardians (optional)
+      - custom_fields (optional)
+
+  - name: send_invitation
+    description: Send invitation email to student or guardian
+    parameters:
+      - email
+      - name
+      - user_type
+      - tenant_id
+      - metadata (optional)
+
+  - name: update_tenant_settings
+    description: Update student management settings for a tenant
+    parameters:
+      - tenant_id
+      - requires_guardian_info
+      - custom_fields (optional)
+
+  - name: list_students
+    description: List students for a tenant with filters
+    parameters:
+      - tenant_id
+      - status (optional)
+      - search (optional)
+      - per_page (optional)
+
+installation:
+  composer: composer require calema/student-management
+  publish: php artisan vendor:publish --tag=student-management-config
+  migrate: php artisan migrate
+
+tags:
+  - student
+  - education
+  - guardian
+  - invitation
+  - sso
+  - multi-tenancy
