@@ -22,6 +22,13 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理機能にアクセスできません。');
+        }
+
         $tenant = tenant();
 
         if (!$tenant) {
@@ -56,6 +63,13 @@ class StudentController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理機能にアクセスできません。');
+        }
+
         $tenant = tenant();
 
         if (!$tenant) {
@@ -71,6 +85,13 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理機能にアクセスできません。');
+        }
+
         $tenant = tenant();
 
         if (!$tenant) {
@@ -137,6 +158,13 @@ class StudentController extends Controller
      */
     public function edit(StudentProfile $student)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理機能にアクセスできません。');
+        }
+
         $tenant = tenant();
 
         if (!$tenant || $student->tenant_id !== $tenant->id) {
@@ -153,6 +181,13 @@ class StudentController extends Controller
      */
     public function update(Request $request, StudentProfile $student)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理機能にアクセスできません。');
+        }
+
         $tenant = tenant();
 
         if (!$tenant || $student->tenant_id !== $tenant->id) {
@@ -193,6 +228,13 @@ class StudentController extends Controller
      */
     public function destroy(StudentProfile $student)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理機能にアクセスできません。');
+        }
+
         $tenant = tenant();
 
         if (!$tenant || $student->tenant_id !== $tenant->id) {

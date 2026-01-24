@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Calema\MultiTenancy\Models\Tenant;
 use Calema\StudentManagement\Models\TenantCustomField;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TenantSettingsController extends Controller
@@ -15,6 +16,13 @@ class TenantSettingsController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理設定にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理設定にアクセスできません。');
+        }
+
         $tenant = Tenant::findOrFail(session('tenant_id'));
 
         // Get custom fields for this tenant
@@ -31,6 +39,13 @@ class TenantSettingsController extends Controller
      */
     public function update(Request $request)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理設定にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理設定にアクセスできません。');
+        }
+
         $validated = $request->validate([
             'requires_guardian_info' => 'required|boolean',
             'auto_generate_student_number' => 'nullable|boolean',
@@ -74,6 +89,13 @@ class TenantSettingsController extends Controller
      */
     public function storeCustomField(Request $request)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理設定にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理設定にアクセスできません。');
+        }
+
         $validated = $request->validate([
             'field_name' => 'required|string|max:100',
             'field_label' => 'required|string|max:255',
@@ -113,6 +135,13 @@ class TenantSettingsController extends Controller
      */
     public function updateCustomField(Request $request, TenantCustomField $customField)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理設定にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理設定にアクセスできません。');
+        }
+
         $validated = $request->validate([
             'field_label' => 'required|string|max:255',
             'field_type' => 'required|in:text,textarea,number,date,select,checkbox,radio',
@@ -154,6 +183,13 @@ class TenantSettingsController extends Controller
      */
     public function destroyCustomField(TenantCustomField $customField)
     {
+        $user = Auth::user();
+
+        // 生徒は生徒管理設定にアクセス不可
+        if ($user->hasRole('student')) {
+            abort(403, '生徒ユーザは生徒管理設定にアクセスできません。');
+        }
+
         $tenant = Tenant::findOrFail(session('tenant_id'));
 
         // Ensure the custom field belongs to this tenant
